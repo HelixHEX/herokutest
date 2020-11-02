@@ -1,8 +1,6 @@
 import React from 'react'
 
-interface ChatProps {
-
-}
+interface ChatProps {}
 
 const Chat: React.FC<ChatProps> = () => {
     return (

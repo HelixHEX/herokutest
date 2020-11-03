@@ -18,13 +18,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "noImplicitAny": false
   },
   "include": [
     "src",
     "index.d.ts"
   ],
-  "rules": {
-    "no-unused-vars": "off"
-  }
+  "compileOnSave": false
 }

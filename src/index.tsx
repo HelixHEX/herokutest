@@ -20,8 +20,8 @@ import {
 } from "@chakra-ui/core";
 
 const { REACT_SERVER_URL, REACT_APP_SERVER_SUBSCRIPTIONS } = process.env;
-const url = REACT_SERVER_URL?.toString() || "localhost:5000/graphql"
-const subscriptionsUrl = REACT_APP_SERVER_SUBSCRIPTIONS?.toString() || "ws://localhost:5000/graphql"
+// const url = REACT_SERVER_URL?.toString() || "localhost:5000/graphql"
+// const subscriptionsUrl = REACT_APP_SERVER_SUBSCRIPTIONS?.toString() || "ws://localhost:5000/graphql"
 const subscriptionClient = new SubscriptionClient(
   "ws://20ed0f338bf7.ngrok.io/graphql",
   {
@@ -29,7 +29,7 @@ const subscriptionClient = new SubscriptionClient(
   }
 );
 const client = createClient({
-  url: "https://20ed0f338bf7.ngrok.io/graphql" ,
+  url: "https://20ed0f338bf7.ngrok.io/graphql",
   exchanges: [
     ...defaultExchanges,
     subscriptionExchange({
@@ -40,14 +40,14 @@ const client = createClient({
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <ColorModeProvider> 
-        <Provider value={client}>
+    <Provider value={client}>
+      <ThemeProvider theme={theme}>
+        <ColorModeProvider>
           <App />
-        </Provider>
-        <CSSReset />
-      </ColorModeProvider>
-    </ThemeProvider> 
+          <CSSReset />
+        </ColorModeProvider>
+      </ThemeProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

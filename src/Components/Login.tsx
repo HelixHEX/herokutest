@@ -61,7 +61,7 @@ const Login: React.FC<loginProps> = () => {
           padding="5%"
         >
           <Input
-            bg={colorMode === "light" ? "blue" : "blue.600"}
+            bg={colorMode === "light" ? "white" : "blue.600"}
             placeholder="Username"
             value={user.username}
             width="75%"

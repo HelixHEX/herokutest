@@ -2,17 +2,23 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 //urql
-import { useQuery, useSubscription } from "urql";
+import { useQuery, useSubscription, useMutation } from "urql";
 
 //state-pool
 import { useGlobalState } from "state-pool";
 
 //messages ui
-import {ChatFeed} from 'react-chat-ui'
+import { ChatFeed } from "react-chat-ui";
 
 //chakra
-import {useColorMode} from '@chakra-ui/core'
+import { useColorMode, Button, Grid, Flex, Box } from "@chakra-ui/core";
+
+//Navbar
 import Navbar from "./Navbar";
+
+//formik
+import { Form, Formik } from "formik";
+import { InputField } from "./InputField";
 
 interface ChatProps {}
 
@@ -38,12 +44,24 @@ subscription {
 }
 `;
 
+const sendMessageMutation = `
+mutation ($message:String!, $senderName:String!){
+  send(input: {message:$message, senderName:$senderName}) {
+    message {
+      senderName
+      message
+      id
+    }
+  }
+}
+`;
+
 const Chat: React.FC<ChatProps> = () => {
   //get messages query
   const [{ data }]: any = useQuery({ query: allMessagesQuery });
 
   //new messages subscription
-  const [result] = useSubscription({query: newMessageQuery})
+  const [result] = useSubscription({ query: newMessageQuery });
 
   //store messages
   const [messages, setMessages] = useState<String[]>([]);
@@ -69,11 +87,7 @@ const Chat: React.FC<ChatProps> = () => {
         message: result?.data?.newMessage.message,
         senderName: result?.data?.newMessage.senderName,
       } as any;
-      if (messages.length <  1) {
-        setMessages([messageText])
-      } else {
-        setMessages( m => [...m, messageText])
-      }
+      setMessages((m) => [...m, messageText]);
     }
   }, [setMessages, data, result.data, history, user, messages?.length]);
   return (
@@ -81,43 +95,193 @@ const Chat: React.FC<ChatProps> = () => {
       <Navbar />
       <Messages messages={messages} />
     </>
-    );
+  );
 };
 
 const Messages = (props: any) => {
   //colormode
   const { colorMode } = useColorMode();
 
+  //send message mutation
+  // eslint-disable-next-line
+  const [_, send] = useMutation(sendMessageMutation);
+
   const { messages } = props;
 
-  let textBubble = colorMode === 'light' ? 'gray.50' : 'gray.800'
-  let textColor = colorMode === 'light' ? 'black' : 'white'
+  //get global user
+  const [user] = useGlobalState("user");
+
+  let textBubble = colorMode === "light" ? "gray.50" : "gray.800";
+  let textColor = colorMode === "light" ? "#D53F8C" : "#3182CE";
   //check if messages are loaded
   if (messages === undefined) {
     return (
       <>
         <div>Loading...</div>
+        <Formik
+          initialValues={{ message: "" }}
+          onSubmit={async (values: any, actions: any) => {
+            await send({ message: values.message, senderName: user.username });
+            actions.setSubmitting(false);
+            values.message = "";
+          }}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <Grid gridColumn={2} gridRow={1} width={"100%"}>
+                <Flex>
+                  <Box pos={"fixed"} bottom={0} mb={4} w={"100%"}>
+                    <InputField
+                      name="message"
+                      placeholder="Enter Message"
+                      label=""
+                    />
+                  </Box>
+                </Flex>
+                <Button
+                  pos={"fixed"}
+                  bottom={0}
+                  mb={4}
+                  right={0}
+                  borderBottomLeftRadius={0}
+                  borderTopLeftRadius={0}
+                  type="submit"
+                  isLoading={isSubmitting}
+                  variantColor="purple"
+                  variant="ghost"
+                >
+                  Send
+                </Button>
+              </Grid>
+            </Form>
+          )}
+        </Formik>
       </>
     );
   }
   return (
     <>
-      <ChatFeed
-        messages={messages}
-        hasInputField={false}
-        showSenderName
-        bubbleStyles={{
-          text: {
-            fontSize: 15,
-            color: textColor,
-          },
-          chatbubble: {
-            border: "none",
-            padding: 10,
-            backgroundColor: textBubble,
-          },
-        }}
-      />
+      {/* <Flex>
+        <Flex mb='10%'>
+          <ChatFeed
+            messages={messages}
+            hasInputField={false}
+            showSenderName
+            bubbleStyles={{
+              text: {
+                fontSize: 15,
+                color: textColor,
+              },
+              chatbubble: {
+                border: "none",
+                padding: 10,
+                backgroundColor: textBubble,
+              },
+            }}
+          />
+        </Flex>
+        <Formik
+          initialValues={{ message: "" }}
+          onSubmit={async (values: any, actions: any) => {
+            await send({ message: values.message, senderName: user.username });
+            actions.setSubmitting(false);
+            values.message = "";
+          }}
+        >
+          {(isSubmitting: any) => (
+            <Form>
+              <Grid gridColumn={2} gridRow={1} width={"100%"}>
+                <Flex>
+                  <Box pos={"fixed"} bottom={0} mb={4} w={"100%"}>
+                    <InputField
+                      name="message"
+                      placeholder="Enter Message"
+                      label=""
+                    />
+                  </Box>
+                </Flex>
+                <Button
+                  pos={"fixed"}
+                  bottom={0}
+                  mb={4}
+                  right={0}
+                  borderBottomLeftRadius={0}
+                  borderTopLeftRadius={0}
+                  type="submit"
+                  isLoading={isSubmitting}
+                  variantColor="purple"
+                  variant="ghost"
+                >
+                  Send
+                </Button>
+              </Grid>
+            </Form>
+          )}
+        </Formik>
+      </Flex> */}
+      <Flex>
+      <Flex>
+          <Formik
+            initialValues={{ message: "" }}
+            onSubmit={async (values, actions) => {
+              await send({
+                message: values.message,
+                senderName: user.username,
+              });
+              actions.setSubmitting(false);
+              values.message = "";
+            }}
+          >
+            {({ isSubmitting }) => (
+              <Form>
+                <Grid gridColumn={2} gridRow={1} width={"100%"}>
+                  <Flex>
+                    <Box pos={"fixed"} bottom={0} mb={4} w={"100%"}>
+                      <InputField
+                        name="message"
+                        placeholder="Enter Message"
+                        label=""
+                      />
+                    </Box>
+                  </Flex>
+                  <Button
+                    pos={"fixed"}
+                    bottom={0}
+                    mb={4}
+                    right={0}
+                    borderBottomLeftRadius={0}
+                    borderTopLeftRadius={0}
+                    type="submit"
+                    isLoading={isSubmitting}
+                    variantColor="purple"
+                    variant="ghost"
+                  >
+                    Send
+                  </Button>
+                </Grid>
+              </Form>
+            )}
+          </Formik>
+        </Flex>
+        <Flex overflow='hidden' w='100%' maxH={'790px'}>
+          <ChatFeed
+            messages={messages}
+            hasInputField={false}
+            showSenderName
+            bubbleStyles={{
+              text: {
+                fontSize: 15,
+                color: textColor,
+              },
+              chatbubble: {
+                border: "none",
+                padding: 10,
+                backgroundColor: textBubble,
+              },
+            }}
+          />
+        </Flex>
+      </Flex>
     </>
   );
 };

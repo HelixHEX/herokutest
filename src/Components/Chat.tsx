@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 //urql
-import { useQuery } from "urql";
+import { useQuery, useSubscription } from "urql";
 
 //state-pool
 import { useGlobalState } from "state-pool";
@@ -28,9 +28,22 @@ query {
 }
 `;
 
+const newMessageQuery = `
+subscription {
+  newMessage {
+      id
+      message
+      senderName
+  }
+}
+`;
+
 const Chat: React.FC<ChatProps> = () => {
   //get messages query
   const [{ data }]: any = useQuery({ query: allMessagesQuery });
+
+  //new messages subscription
+  const [result] = useSubscription({query: newMessageQuery})
 
   //store messages
   const [messages, setMessages] = useState<String[]>([]);
@@ -48,7 +61,21 @@ const Chat: React.FC<ChatProps> = () => {
 
     //set messages
     setMessages(data?.allMessages?.messages);
-  }, [setMessages, data, history, user]);
+
+    //display new messages
+    if (result?.data) {
+      const messageText = {
+        id: result?.data?.newMessage.id,
+        message: result?.data?.newMessage.message,
+        senderName: result?.data?.newMessage.senderName,
+      } as any;
+      if (messages.length <  1) {
+        setMessages([messageText])
+      } else {
+        setMessages( m => [...m, messageText])
+      }
+    }
+  }, [setMessages, data, result.data, history, user, messages?.length]);
   return (
     <>
       <Navbar />

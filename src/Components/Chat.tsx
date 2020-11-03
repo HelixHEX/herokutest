@@ -92,7 +92,9 @@ const Chat: React.FC<ChatProps> = () => {
   }, [setMessages, data, result.data, history, user, messages?.length]);
   return (
     <>
-      <Navbar />
+      <Flex>
+        <Navbar />
+      </Flex>
       <Messages messages={messages} />
     </>
   );
@@ -219,8 +221,8 @@ const Messages = (props: any) => {
           )}
         </Formik>
       </Flex> */}
-      <Flex>
-      <Flex>
+      {/* <Flex >
+        <Flex pos='absolute' zIndex={1}>
           <Formik
             initialValues={{ message: "" }}
             onSubmit={async (values, actions) => {
@@ -236,7 +238,7 @@ const Messages = (props: any) => {
               <Form>
                 <Grid gridColumn={2} gridRow={1} width={"100%"}>
                   <Flex>
-                    <Box pos={"fixed"} bottom={0} mb={4} w={"100%"}>
+                    <Box mb={4} w={"100%"}>
                       <InputField
                         name="message"
                         placeholder="Enter Message"
@@ -263,7 +265,70 @@ const Messages = (props: any) => {
             )}
           </Formik>
         </Flex>
-        <Flex overflow='hidden' w='100%' maxH={'790px'}>
+        <Flex top={"5%"} mb={"5%"} position="absolute" zIndex={2}>
+          <ChatFeed
+            messages={messages}
+            hasInputField={false}
+            showSenderName
+            bubbleStyles={{
+              text: {
+                fontSize: 15,
+                color: "black",
+              },
+              chatbubble: {
+                border: "none",
+                padding: 10,
+                backgroundColor: "white",
+              },
+            }}
+          />
+        </Flex>
+      </Flex> */}
+      <Flex ml='10px'>
+        <Box  pos="fixed" w={"100%"} bg={colorMode === "light" ? "white" : "gray.800"} zIndex={10} bottom='0'>
+          <Formik
+            initialValues={{ message: "" }}
+            onSubmit={async (values, actions) => {
+              await send({
+                message: values.message,
+                senderName: user.username,
+              });
+              actions.setSubmitting(false);
+              values.message = "";
+            }}
+          >
+            {({ isSubmitting }) => (
+              <Form>
+                <Grid gridColumn={2} gridRow={1} width={"100%"}>
+                  <Flex>
+                    <Box mb={4} w={"100%"}>
+                      <InputField
+                        name="message"
+                        placeholder="Enter Message"
+                        label=""
+                      />
+                    </Box>
+                  </Flex>
+                  <Button
+                    pos={"fixed"}
+                    bottom={0}
+                    mb={4}
+                    right={0}
+                    borderBottomLeftRadius={0}
+                    borderTopLeftRadius={0}
+                    type="submit"
+                    isLoading={isSubmitting}
+                    variantColor="purple"
+                    variant="ghost"
+                  >
+                    Send
+                  </Button>
+                </Grid>
+              </Form>
+            )}
+          </Formik>
+        </Box>
+        <Flex mb='70px' mt='50px'  pos='relative'>
           <ChatFeed
             messages={messages}
             hasInputField={false}

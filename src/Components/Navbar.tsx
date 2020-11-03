@@ -4,7 +4,6 @@ import React from "react";
 import { Flex, useColorMode, IconButton } from "@chakra-ui/core";
 
 interface NavbarProps {}
-
 const Navbar: React.FC<NavbarProps> = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   return (

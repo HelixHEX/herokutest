@@ -3,13 +3,13 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 
-// import {
-//   Provider,
-//   subscriptionExchange,
-//   createClient,
-//   defaultExchanges,
-// } from "urql";
-// import { SubscriptionClient } from "subscriptions-transport-ws";
+import {
+  Provider,
+  subscriptionExchange,
+  createClient,
+  defaultExchanges,
+} from "urql";
+import { SubscriptionClient } from "subscriptions-transport-ws";
 
 // chakra ui
 import {
@@ -19,30 +19,32 @@ import {
   ColorModeProvider,
 } from "@chakra-ui/core";
 
-// const subscriptionClient = new SubscriptionClient(
-//   "ws://25fe7a9f964b.ngrok.io/graphql",
-//   {
-//     reconnect: true,
-//   }
-// );
-
-// const client = createClient({
-//   url: "https://25fe7a9f964b.ngrok.io/graphql",
-//   exchanges: [
-//     ...defaultExchanges,
-//     subscriptionExchange({
-//       forwardSubscription: (operation) => subscriptionClient.request(operation),
-//     }),
-//   ],
-// });
+const { REACT_SERVER_URL, REACT_APP_SERVER_SUBSCRIPTIONS } = process.env;
+const url = REACT_SERVER_URL?.toString() || "localhost:5000/graphql"
+const subscriptionsUrl = REACT_APP_SERVER_SUBSCRIPTIONS?.toString() || "ws://localhost:5000/graphql"
+const subscriptionClient = new SubscriptionClient(
+  subscriptionsUrl,
+  {
+    reconnect: true,
+  }
+);
+const client = createClient({
+  url: url ,
+  exchanges: [
+    ...defaultExchanges,
+    subscriptionExchange({
+      forwardSubscription: (operation) => subscriptionClient.request(operation),
+    }),
+  ],
+});
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <ColorModeProvider> 
-        {/* <Provider value={client}> */}
+        <Provider value={client}>
           <App />
-        {/* </Provider> */}
+        </Provider>
         <CSSReset />
       </ColorModeProvider>
     </ThemeProvider> 

@@ -284,7 +284,7 @@ const Messages = (props: any) => {
           />
         </Flex>
       </Flex> */}
-      <Flex ml='10px'>
+      <Flex w='100%' ml='10px'>
         <Box  pos="fixed" w={"100%"} bg={colorMode === "light" ? "white" : "gray.800"} zIndex={10} bottom='0'>
           <Formik
             initialValues={{ message: "" }}
@@ -301,7 +301,7 @@ const Messages = (props: any) => {
               <Form>
                 <Grid gridColumn={2} gridRow={1} width={"100%"}>
                   <Flex>
-                    <Box mb={4} w={"100%"}>
+                    <Box mr="70px" mb={4} w={"100%"}>
                       <InputField
                         name="message"
                         placeholder="Enter Message"
@@ -328,7 +328,7 @@ const Messages = (props: any) => {
             )}
           </Formik>
         </Box>
-        <Flex mb='70px' mt='50px'  pos='relative'>
+        <Flex mb='70px' mt='50px' w='100%' pos='relative'>
           <ChatFeed
             messages={messages}
             hasInputField={false}
@@ -342,6 +342,7 @@ const Messages = (props: any) => {
                 border: "none",
                 padding: 10,
                 backgroundColor: textBubble,
+                maxWidth: '100%'
               },
             }}
           />

@@ -5,7 +5,14 @@ import { useHistory } from "react-router-dom";
 import { store, useGlobalState } from "state-pool";
 
 //chakra ui
-import { useToast, Input, Button, Flex, useColorMode } from "@chakra-ui/core";
+import {
+  useToast,
+  Input,
+  Button,
+  Flex,
+  useColorMode,
+  Box,
+} from "@chakra-ui/core";
 import Navbar from "./Navbar";
 
 interface loginProps {}
@@ -55,19 +62,31 @@ const Login: React.FC<loginProps> = () => {
           mt="15%"
           align="center"
           height="200px"
-          width="500px"
+          width={["300px", "300px", "400px", "500px"]}
           rounded="5px"
           justifyContent="space-between"
           padding="5%"
         >
-          <Input
-            bg={colorMode === "light" ? "white" : "blue.600"}
-            placeholder="Username"
-            value={user.username}
-            width="75%"
-            onChange={handleChange}
-          />
-          <Button type="submit" variantColor={colorMode === "light" ? "pink" : "cyan"}>
+          <Box
+            width={[
+              "65%", // base
+              "65%", // 480px upwards
+              "70%", // 768px upwards
+              "70%", // 992px upwards
+            ]}
+          >
+            <Input
+              bg={colorMode === "light" ? "white" : "blue.600"}
+              placeholder="Username"
+              value={user.username}
+              w="100%"
+              onChange={handleChange}
+            />
+          </Box>
+          <Button
+            type="submit"
+            variantColor={colorMode === "light" ? "pink" : "cyan"}
+          >
             Login
           </Button>
         </Flex>

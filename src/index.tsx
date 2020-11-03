@@ -19,7 +19,7 @@ import {
   ColorModeProvider,
 } from "@chakra-ui/core";
 
-const { REACT_SERVER_URL, REACT_APP_SERVER_SUBSCRIPTIONS } = process.env;
+// const { REACT_SERVER_URL, REACT_APP_SERVER_SUBSCRIPTIONS } = process.env;
 // const url = REACT_SERVER_URL?.toString() || "localhost:5000/graphql"
 // const subscriptionsUrl = REACT_APP_SERVER_SUBSCRIPTIONS?.toString() || "ws://localhost:5000/graphql"
 const subscriptionClient = new SubscriptionClient(

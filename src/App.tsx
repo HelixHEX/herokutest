@@ -8,8 +8,7 @@ const App = () => {
   return (
     <Router>
     <div>
-      <Route exact path='/' render={(props) => <Home {...props} />} />
-      <Route exact path="/login" render={(props) => <Login {...props} />} />
+      <Route exact path="/" render={(props) => <Login {...props} />} />
       <Route exact path="/chat" render={(props) => <Chat {...props} />} />
     </div>
   </Router>

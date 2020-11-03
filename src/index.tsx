@@ -11,13 +11,13 @@ import App from "./App";
 // } from "urql";
 // import { SubscriptionClient } from "subscriptions-transport-ws";
 
-// // chakra ui
-// import {
-//   CSSReset,
-//   ThemeProvider,
-//   theme,
-//   ColorModeProvider,
-// } from "@chakra-ui/core";
+// chakra ui
+import {
+  CSSReset,
+  ThemeProvider,
+  theme,
+  ColorModeProvider,
+} from "@chakra-ui/core";
 
 // const subscriptionClient = new SubscriptionClient(
 //   "ws://25fe7a9f964b.ngrok.io/graphql",
@@ -38,14 +38,14 @@ import App from "./App";
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <ThemeProvider theme={theme}>
-      <ColorModeProvider>
-        <Provider value={client}> */}
+    <ThemeProvider theme={theme}>
+      <ColorModeProvider> 
+        {/* <Provider value={client}> */}
           <App />
-        {/* </Provider>
+        {/* </Provider> */}
         <CSSReset />
       </ColorModeProvider>
-    </ThemeProvider> */}
+    </ThemeProvider> 
   </React.StrictMode>,
   document.getElementById("root")
 );
